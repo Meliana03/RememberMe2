@@ -1,0 +1,93 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e84acfc14eb522f408cf784bcaf4534e, type: 3}
+  m_Name: QuestionData
+  m_EditorClassIdentifier: 
+  questions:
+  - questionText: Produk ini termasuk mass market dan sering dimakan anak kos kalau
+      akhir bulan
+    answer: Indomie
+  - questionText: Teknik pengembangan sebuah produk untuk mendapat feedback dari
+      calon pengguna
+    answer: Mvp
+  - questionText: Produk ini termasuk segmented market, memiliki warna merah, dan
+      dipakai sebelum ke kondangan
+    answer: Lipstik
+  - questionText: Kegiatan yang dilakukan pemilik startup didepan investor
+    answer: Pitching
+  - questionText: Contoh atau model awal dari produk
+    answer: Prototype
+  - questionText: Produk ini termasuk mass market, berkaki 4 tetapi tidak bisa jalan
+    answer: Kursi
+  - questionText: Produk ini merupakan mass market, bisa terbang, dan kalau jatoh
+      bisa pecah
+    answer: Piring
+  - questionText: Kalau gak ada gak bisa ngapa-ngapain
+    answer: Modal
+  - questionText: Hak yang dilekatkan terhadap sebuah karya untuk melindungi dan
+      mempatenkan karya serta pemiliknya
+    answer: Copyright
+  - questionText: Bisa duduk tapi gak bisa berdiri, dan jangka pakainya cuma 1 tahun
+    answer: Kalender
+  - questionText: Perusahaan yang baru didirikan, dan masih dalam fase pengembangan
+    answer: Startup
+  - questionText: Hak cipta, paten, merek dagang, dan rahasia dagang termasuk bagian
+      dari
+    answer: Haki
+  - questionText: Bentuk kerjasama antara pemilik merk dagang, produk, atau sistem
+      operasional
+    answer: Franchise
+  - questionText: Kegiatan yang dilakukan oleh perusahaan untuk mempromosikan produk
+      atau layanan
+    answer: Marketing
+  - questionText: Tahapan yang dilakukan untuk mencoba prototype
+    answer: Testing
+  - questionText: Setiap orang pasti memilikinya
+    answer: Ide
+  - questionText: 6M terdiri dari Man, Money, Method, Machine, Material, dan
+    answer: Market
+  - questionText: Kegiatan menjiplak gagasan atau karya orang lain
+    answer: Plagiasi
+  - questionText: 'Platform digital yang digunakan untuk berkomunikasi yang juga
+      dapat digunakan untuk promosi '
+    answer: Medsos
+  - questionText: Merek produk ini sangat terkenal, dan pendirinya merupakan salah
+      satu technopreneurship terkenal
+    answer: Apple
+  - questionText: Kegiatan yang dilakukan pemilik startup didepan investor
+    answer: Pitching
+  - questionText: Hak yang dilekatkan terhadap sebuah karya untuk melindungi dan
+      mempatenkan karya serta pemiliknya
+    answer: Copyright
+  - questionText: 'Platform digital yang digunakan untuk berkomunikasi yang juga
+      dapat digunakan untuk promosi '
+    answer: Medsos
+  - questionText: Contoh atau model awal dari produk
+    answer: Prototype
+  - questionText: Teknik pengembangan sebuah produk untuk mendapat feedback dari
+      calon pengguna
+    answer: Mvp
+  - questionText: Produk ini merupakan mass market, bisa terbang, dan kalau jatoh
+      bisa pecah
+    answer: Piring
+  - questionText: Produk ini merupakan mass market, bisa terbang, dan kalau jatoh
+      bisa pecah
+    answer: Piring
+  - questionText: Produk ini merupakan mass market, bisa terbang, dan kalau jatoh
+      bisa pecah
+    answer: Piring
+  - questionText: Produk ini merupakan mass market, bisa terbang, dan kalau jatoh
+      bisa pecah
+    answer: Piring
+  - questionText: Produk ini merupakan mass market, bisa terbang, dan kalau jatoh
+      bisa pecah
+    answer: Piring
