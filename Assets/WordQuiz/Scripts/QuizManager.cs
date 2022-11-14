@@ -499,7 +499,7 @@ public class QuizManager : MonoBehaviour
         ResetWrongIndex();
         for (int i = 0; i < answerWord.Length; i++)
         {
-            Debug.Log(char.ToUpper(answerWord[i]) + " vs " + char.ToUpper(answerWordArray[i].charValue) + " = " + (char.ToUpper(answerWord[i]) != char.ToUpper(answerWordArray[i].charValue)));
+            //Debug.Log(char.ToUpper(answerWord[i]) + " vs " + char.ToUpper(answerWordArray[i].charValue) + " = " + (char.ToUpper(answerWord[i]) != char.ToUpper(answerWordArray[i].charValue)));
             if(char.ToUpper(answerWord[i]) != char.ToUpper(answerWordArray[i].charValue))
             {
                 WrongIndex[countWrongIndex] = i;
@@ -512,7 +512,7 @@ public class QuizManager : MonoBehaviour
         while(a < countWrongIndex)
         {
             //menghapus _ di index yang hurufnya salah
-            Debug.Log("index: " + selectedWordIndex[WrongIndex[a]]);
+            //Debug.Log("index: " + selectedWordIndex[WrongIndex[a]]);
             index = selectedWordIndex[WrongIndex[a]];
             optionsWordArray[index].gameObject.SetActive(true);
             //selectedWordIndex.RemoveAt(WrongIndex[a]);/// ini penyebab error yg kemarin, mending dijadiin -999 aja indexnya
@@ -566,31 +566,44 @@ public class QuizManager : MonoBehaviour
             currentClue = currentClue - 1;
             cluebuttonText.text = "x" + currentClue;
 
-            for(int i = 0; i < answerWord.Length; i++)
+            answerWordArray[currentAnswerIndex].SetChar(char.ToUpper(answerWord[currentAnswerIndex])); // tulis huruf yg ada di kolom jawaban
+            clueIndex[countIndex] = currentAnswerIndex;
+            countIndex += 1;
+        
+            // Hapus opsi pilihan huruf yang sudah ditampilin di clue
+            for(int j = 0; j < charArray.Length; j++)
             {
-                if(char.ToUpper(answerWord[i]) == char.ToUpper(answerWord[currentAnswerIndex])) // mencari apakah ada huruf yg sama dgn index saat ini
+                if(charArray[j] == char.ToUpper(answerWord[currentAnswerIndex]))
                 {
-                    answerWordArray[i].SetChar(char.ToUpper(answerWord[i])); // tulis huruf yg ada di kolom jawaban
-                    clueIndex[countIndex] = i;
-                    countIndex += 1;
-                
-                  // Hapus opsi pilihan huruf yang sudah ditampilin di clue
-                  for(int j = 0; j < charArray.Length; j++)
-                    {
-                        if(charArray[j] == char.ToUpper(answerWord[i]))
-                        {
-                            optionsWordArray[j].gameObject.SetActive(false);
-                        }
-                    }
+                    optionsWordArray[j].gameObject.SetActive(false);
                 }
             }
+
+            // for(int i = 0; i < answerWord.Length; i++)
+            // {
+            //     if(char.ToUpper(answerWord[i]) == char.ToUpper(answerWord[currentAnswerIndex])) // mencari apakah ada huruf yg sama dgn index saat ini
+            //     {
+            //         answerWordArray[i].SetChar(char.ToUpper(answerWord[i])); // tulis huruf yg ada di kolom jawaban
+            //         clueIndex[countIndex] = i;
+            //         countIndex += 1;
+                
+            //       // Hapus opsi pilihan huruf yang sudah ditampilin di clue
+            //       for(int j = 0; j < charArray.Length; j++)
+            //         {
+            //             if(charArray[j] == char.ToUpper(answerWord[i]))
+            //             {
+            //                 optionsWordArray[j].gameObject.SetActive(false);
+            //             }
+            //         }
+            //     }
+            // }
            CheckIndexClue();
 
            for(int i = 0; i< answerWord.Length; i++)
             {
                 if(char.ToUpper(answerWordArray[i].charValue) != '_') 
                 {    
-                    Debug.Log(clueIndex[a]);
+                    //Debug.Log(clueIndex[a]);
                     if(char.ToUpper(answerWordArray[i].charValue) != char.ToUpper(answerWordArray[clueIndex[a]].charValue))
                     {
                         answerWordArray[i].SetChar('_');
