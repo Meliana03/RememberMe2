@@ -10,12 +10,7 @@ public class QuizManager : MonoBehaviour
 {
 
     public static QuizManager instance;
-    [SerializeField] private GameObject popUp;
-    [SerializeField] private GameObject popUpBenar;
     [SerializeField] private QuizDataScriptable questionData;
-
-//    [SerializeField]
-//    private Image questionImage; //Buat gambar soal
 
     [SerializeField] private Text questionText;
 
@@ -35,7 +30,6 @@ public class QuizManager : MonoBehaviour
     //Random Question
     private List<int> randomIndex = new List<int>();
     private int a = 0;
-    //private int[] randomCurrentQuestionIndex = new int [31];
 
     // Time
     float currentTime;
@@ -62,24 +56,34 @@ public class QuizManager : MonoBehaviour
     private int[] clueIndex = new int [5];
     private int countIndex = 0;
 
-    //PopUp
+    //PopUp salah
     private bool wrongAnswer = false;
     private float popUpCurrentTime = 0.0f;
     private float timeToWait = 3.0f;
-
-     //PopUp Benar
-   // private bool PopUpCorrectAnswer = false;
+    [SerializeField] private GameObject popUp;
+    
+    //PopUp Benar
     private float popUpCATime = 0.0f;
     private float CAtimeToWait = 3.0f;
+    [SerializeField] private GameObject popUpBenar;
+
+    //PopUp Lose
+    private float popUpLoseTime = 0.0f;
+    private float timeToLose = 3.0f;
+    [SerializeField] private GameObject popUpLose;
+
+    //PopUp Win
+    [SerializeField] private GameObject popUpWin;
+    private float popUpWinTime = 0.0f;
+    private float timeToWin = 3.0f;
 
     //Hp
     public int CountHp;
     [SerializeField] private Image[] hearts;
 
     //WrongAlphabet
-    public int[] WrongIndex = new int [10];
+    private int[] WrongIndex = new int [10];
     private int countWrongIndex = 0;
-
  
     private void Awake()
     {
@@ -120,13 +124,8 @@ public class QuizManager : MonoBehaviour
         if(currentTime <= 0)
         {
             currentTime = 0;
-         //   SceneManager.LoadScene(sceneName: "LoseScene");
+            UpdateHealth();
         }
-        // if(currentTime == 0 && currentQuestionIndex != 29)
-        // {
-        //     currentTime = timeRemaining;
-        //     setQuestion();
-        // }
         if(currentTime == 0 && a != 29)
         {
             currentTime = timeRemaining;
@@ -135,20 +134,26 @@ public class QuizManager : MonoBehaviour
 
         if(currentCorrectAnswer == 15 && Time.timeScale == 1.0)
         {
-            Time.timeScale = 0f;
-            SceneManager.LoadScene(sceneName: "WinScene");
+            //Time.timeScale = 0f;
+            popUpWin.SetActive(true);
+            popUpWinTime += Time.deltaTime;
+            if(popUpWinTime >= timeToWin)
+            {
+                SceneManager.LoadScene(sceneName: "WinScene");
+            }
         }
-        // else if(currentCorrectAnswer != 15 && currentQuestionIndex == 29)
-        // {
-        //     SceneManager.LoadScene(sceneName: "LoseScene");
-        // }
         else if(currentCorrectAnswer != 15 && a == 29 && countPassIndex2 == 5)
         {
             SceneManager.LoadScene(sceneName: "LoseScene");
         }
         else if(CountHp == 0)
         {
-            SceneManager.LoadScene(sceneName: "LoseScene");
+            popUpLose.SetActive(true);
+            popUpLoseTime += Time.deltaTime;
+            if(popUpLoseTime >= timeToLose)
+            {
+                SceneManager.LoadScene(sceneName: "LoseScene");
+            }
         }
 
         if(wrongAnswer == true)
@@ -161,7 +166,7 @@ public class QuizManager : MonoBehaviour
                 wrongAnswer = false;
                 for(int i = 0; i < answerWord.Length; i++)
                 {
-                    if(char.ToUpper(answerWord[i]) == char.ToUpper(answerWordArray[i].charValue))
+                   if(char.ToUpper(answerWord[i]) == char.ToUpper(answerWordArray[i].charValue))
                     {
                         WrongIndex[i] = -999;
                     }
@@ -199,6 +204,7 @@ public class QuizManager : MonoBehaviour
 
     public void UpdateHealth()
     {
+        CountHp = CountHp - 1;
         for(int i = 0; i < hearts.Length; i++)
         {
             if(i < CountHp)
@@ -220,7 +226,7 @@ public class QuizManager : MonoBehaviour
         {
             tempIndexList.Add(i);
         }
-        for(int i =0; i < questionData.questions.Count;i++)
+        for(int i = 0; i < questionData.questions.Count;i++)
         {
             do
             {
@@ -239,7 +245,6 @@ public class QuizManager : MonoBehaviour
         selectedWordIndex.Clear();
         currentQuestionIndex = randomIndex[a];
 
-        //questionImage.sprite = questionData.questions[currentQuestionIndex].questionImage;
         questionText.text = questionData.questions[currentQuestionIndex].questionText;
         answerWord = questionData.questions[currentQuestionIndex].answer;
 
@@ -264,12 +269,6 @@ public class QuizManager : MonoBehaviour
             optionsWordArray[i].SetChar(charArray[i]);
         }
        
-        // if(currentQuestionIndex  == 29 && currentCorrectAnswer != 15)
-        // {
-        //     currentQuestionIndex = PassIndex[countPassIndex2];
-        //     countPassIndex2++;
-        //     setQuestion();
-        // }
         if(a  == 29 && currentCorrectAnswer != 15)
         {
             currentQuestionIndex = PassIndex[countPassIndex2];
@@ -298,13 +297,84 @@ public class QuizManager : MonoBehaviour
                 currentAnswerIndex++;
             }
         }
-        selectedWordIndex.Add(WordData.transform.GetSiblingIndex());
+
+        if(selectedWordIndex.Contains(-999))
+            selectedWordIndex[selectedWordIndex.IndexOf(-999)] = WordData.transform.GetSiblingIndex();
+        else
+            selectedWordIndex.Add(WordData.transform.GetSiblingIndex());
 
         answerWordArray[currentAnswerIndex].SetChar(WordData.charValue); //kolom jawaban (_) sesuai dgn currentAnswerIndex misal index 0 brti garis ke 1
         WordData.gameObject.SetActive(false); //menghilangkan huruf yg sudah di pilih
         currentAnswerIndex++;
 
+        // selectedWordIndex.Add(WordData.transform.GetSiblingIndex());
+         for(int i = 0; i < answerWord.Length; i++)
+        {
+            if(answerWordArray[currentAnswerIndex].charValue != '_')
+            {
+                currentAnswerIndex++;
+            }
+        }
+        Scoring();
+        // answerWordArray[currentAnswerIndex].SetChar(WordData.charValue); //kolom jawaban (_) sesuai dgn currentAnswerIndex misal index 0 brti garis ke 1
+        // WordData.gameObject.SetActive(false); //menghilangkan huruf yg sudah di pilih
+        // currentAnswerIndex++;
+
         //Debug.Log(CountHp);
+        // if(currentAnswerIndex >= answerWord.Length)
+        // {
+        //     correctAnswer = true;
+
+        //     for(int i = 0; i < answerWord.Length; i++)
+        //     {
+        //         if(char.ToUpper(answerWord[i]) != char.ToUpper(answerWordArray[i].charValue)) //jika jawaban di (_) gk sama sm jawaban di answer diinspector
+        //         {
+        //             correctAnswer = false;
+        //             break;
+        //         }
+        //     }
+
+        //     if(currentCorrectAnswer <= 15)
+        //     {
+        //         if(correctAnswer)
+        //         {
+        //             gameStatus = GameStatus.Next; 
+        //             score += 1;
+        //             currentCorrectAnswer += 1;
+        //             scoreText.text = currentScore.ToString(score + " /");
+        //             // if(currentQuestionIndex < questionData.questions.Count)
+        //             // {
+        //             //     Invoke("setQuestion", 0.7f); //Panggil set Question waktunya 0.5  
+        //             // }
+        //             if(currentCorrectAnswer != 15)
+        //             {
+        //                 Invoke("setQuestion", 0.7f); //Panggil set Question waktunya 0.5  
+        //             }
+        //         }
+        //         else if(!correctAnswer)
+        //         {
+        //            // Debug.Log("False");
+        //             wrongAnswer = true;
+        //             UpdateHealth();
+        //             EraseWrongAlphabet();
+
+        //             if(popUpCurrentTime == timeToWait)
+        //             {
+        //                 wrongAnswer = false;
+        //             }
+                
+        //         }
+        //     }    
+        //     else if(currentCorrectAnswer == 15)
+        //     {
+        //         Time.timeScale = 0f;
+        //         SceneManager.LoadScene(sceneName: "WinScene");
+        //     }
+        // }
+    }
+
+    private void Scoring()
+    {
         if(currentAnswerIndex >= answerWord.Length)
         {
             correctAnswer = true;
@@ -325,7 +395,7 @@ public class QuizManager : MonoBehaviour
                     gameStatus = GameStatus.Next; 
                     score += 1;
                     currentCorrectAnswer += 1;
-                    scoreText.text = currentScore.ToString(score + " / 15");
+                    scoreText.text = currentScore.ToString(score + " /");
                     // if(currentQuestionIndex < questionData.questions.Count)
                     // {
                     //     Invoke("setQuestion", 0.7f); //Panggil set Question waktunya 0.5  
@@ -339,14 +409,11 @@ public class QuizManager : MonoBehaviour
                 {
                    // Debug.Log("False");
                     wrongAnswer = true;
-                    //currentTime = currentTime - 2;
-                    CountHp = CountHp - 1;
                     UpdateHealth();
                     EraseWrongAlphabet();
 
                     if(popUpCurrentTime == timeToWait)
                     {
-                       // popUp.SetActive(false);
                         wrongAnswer = false;
                     }
                 
@@ -417,11 +484,22 @@ public class QuizManager : MonoBehaviour
         }
     }
 
-    private void EraseWrongAlphabet()
+    void ResetWrongIndex()
+    {
+        for(int i = 0; i < WrongIndex.Length; i++)
+        {
+            WrongIndex[i] = -999;
+        }
+    }
+
+     private void EraseWrongAlphabet()
     {
         int index, a = 0;
-        for(int i = 0; i < answerWord.Length; i++)
+        countWrongIndex = 0;
+        ResetWrongIndex();
+        for (int i = 0; i < answerWord.Length; i++)
         {
+            Debug.Log(char.ToUpper(answerWord[i]) + " vs " + char.ToUpper(answerWordArray[i].charValue) + " = " + (char.ToUpper(answerWord[i]) != char.ToUpper(answerWordArray[i].charValue)));
             if(char.ToUpper(answerWord[i]) != char.ToUpper(answerWordArray[i].charValue))
             {
                 WrongIndex[countWrongIndex] = i;
@@ -434,9 +512,11 @@ public class QuizManager : MonoBehaviour
         while(a < countWrongIndex)
         {
             //menghapus _ di index yang hurufnya salah
+            Debug.Log("index: " + selectedWordIndex[WrongIndex[a]]);
             index = selectedWordIndex[WrongIndex[a]];
             optionsWordArray[index].gameObject.SetActive(true);
-            selectedWordIndex.RemoveAt(WrongIndex[a]);
+            //selectedWordIndex.RemoveAt(WrongIndex[a]);/// ini penyebab error yg kemarin, mending dijadiin -999 aja indexnya
+            selectedWordIndex[WrongIndex[a]] = -999;
 
             //Mengganti huruf yg salah jadi _
             currentAnswerIndex = WrongIndex[a];
@@ -447,7 +527,7 @@ public class QuizManager : MonoBehaviour
         a = 0;
         //index = 0;
     }
-
+    
     public void PassBtnNewText()
     {
         if(currentPass > 0)
@@ -480,6 +560,7 @@ public class QuizManager : MonoBehaviour
 
     public void ClueBtnText()
     {
+        int a = 0;
         if(currentClue > 0)
         {
             currentClue = currentClue - 1;
@@ -505,7 +586,47 @@ public class QuizManager : MonoBehaviour
             }
            CheckIndexClue();
 
-           // Kalau currentAnswerIndex == panjang jawaban - 1 (kalau clue di pakai di kolom paling terakhir) cek apakah jawaban benar atau gk
+           for(int i = 0; i< answerWord.Length; i++)
+            {
+                if(char.ToUpper(answerWordArray[i].charValue) != '_') 
+                {    
+                    Debug.Log(clueIndex[a]);
+                    if(char.ToUpper(answerWordArray[i].charValue) != char.ToUpper(answerWordArray[clueIndex[a]].charValue))
+                    {
+                        answerWordArray[i].SetChar('_');
+                    }
+                    else
+                    {
+                        currentAnswerIndex++;
+                        a++;
+                    }
+                }
+
+                for(int j = 0; j < charArray.Length; j++)
+                {
+                    if(charArray[j] == char.ToUpper(answerWord[i]))
+                    {
+                        optionsWordArray[j].gameObject.SetActive(true);
+                    }
+                }
+            }
+            a = 0;
+
+            for(int i = 0; i< answerWord.Length; i++)
+            {
+                if(char.ToUpper(answerWordArray[i].charValue) != '_')
+                {
+                    currentAnswerIndex++;
+                }
+                else
+                {
+                    currentAnswerIndex = i;
+                    //Debug.Log(i);
+                    break;
+                }
+            }
+
+        //   Kalau currentAnswerIndex == panjang jawaban - 1 (kalau clue di pakai di kolom paling terakhir) cek apakah jawaban benar atau gk
            if(currentAnswerIndex == answerWord.Length)
            {
                 correctAnswer = true;
@@ -524,10 +645,6 @@ public class QuizManager : MonoBehaviour
                     score += 1;
                     currentCorrectAnswer += 1;
                     scoreText.text = currentScore.ToString(score + " / 15");
-                    // if(currentQuestionIndex < questionData.questions.Count)
-                    // {
-                    //     Invoke("setQuestion", 0.5f); //Panggil set Question waktunya 0.5
-                    // }
                     if(currentCorrectAnswer != 15)
                     {
                         Invoke("setQuestion", 0.7f); //Panggil set Question waktunya 0.5  
@@ -550,8 +667,14 @@ public class QuizManager : MonoBehaviour
             canUseClue.enabled = false;
         }
     }
-   
+
+    public void HomeBtn()
+    {
+        SceneManager.LoadScene(sceneName: "CoverScene");
+    }
 }
+
+
 
 [System.Serializable]
 public class QuestionData
